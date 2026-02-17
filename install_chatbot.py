@@ -1,4 +1,11 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+# install_chatbot.py
+import os
+import sys
+
+def create_chatbot_file():
+    """Crée automatiquement le fichier chatbot.py avec le code"""
+    
+    code = '''from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 import warnings
 import random
@@ -16,7 +23,7 @@ class FrenchChatbotPro:
     🤖 ChatBot Français Version Ultra - Avec personnalité !
     """
     
-    # Personnalités disponibles pour le chatbot
+    # Personnalités disponibles
     PERSONNALITES = {
         "1": {
             "name": "Amical 😊",
@@ -54,11 +61,11 @@ class FrenchChatbotPro:
     
     def __init__(self, model_name="microsoft/DialoGPT-small"):
         """
-        Initialisation du chatbot avec une personnalité unique
+        Initialisation du chatbot
         """
-        print("\n" + "🎨" * 40)
-        print("    CHATBOT FRANÇAIS ULTRA - ÉDITION SPÉCIALE")
-        print("🎨" * 40 + "\n")
+        print("\\n" + "🎨" * 40)
+        print("    CHATBOT FRANÇAIS ULTRA")
+        print("🎨" * 40 + "\\n")
         
         print("⚡ Chargement du cerveau artificiel...")
         
@@ -78,23 +85,23 @@ class FrenchChatbotPro:
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
         
-        # Historique intelligent (mémoire à court terme)
+        # Historique
         self.history = deque(maxlen=10)
         
-        # Mémoire à long terme (souvenirs)
+        # Mémoire
         self.memoire_long_terme = self.charger_souvenirs()
         
         # Personnalité active
-        self.personnalite = "1"  # Par défaut: amical
+        self.personnalite = "1"
         
-        # Humeur du bot (change selon la conversation)
+        # Humeur
         self.humeur = "neutre"
-        self.score_humeur = 50  # 0-100
+        self.score_humeur = 50
         
-        # Connaissances du bot
+        # Connaissances
         self.connaissances = self.initialiser_connaissances()
         
-        # Statistiques de conversation
+        # Statistiques
         self.stats = {
             "messages_echanges": 0,
             "mots_total": 0,
@@ -106,7 +113,7 @@ class FrenchChatbotPro:
         self.afficher_personnalite()
     
     def initialiser_connaissances(self):
-        """Initialise une base de connaissances personnalisée"""
+        """Initialise une base de connaissances"""
         return {
             "salutations": {
                 "patterns": ["bonjour", "salut", "coucou", "hello", "hi"],
@@ -126,22 +133,6 @@ class FrenchChatbotPro:
                     "Comme un poisson dans l'eau ! 🐠"
                 ]
             },
-            "meteo": {
-                "patterns": ["météo", "temps", "soleil", "pluie"],
-                "reponses": [
-                    "Je ne vois pas par la fenêtre mais j'imagine que c'est magnifique ! ☀️",
-                    "Le temps ? Je suis plus préoccupé par le temps qu'il fait dans nos cœurs ! 💝",
-                    "Météo ou pas, une bonne conversation réchauffe toujours !"
-                ]
-            },
-            "philosophie": {
-                "patterns": ["vie", "sens", "existence", "but", "pourquoi"],
-                "reponses": [
-                    "La vie est comme un ordinateur : parfois elle plante, mais on peut toujours redémarrer ! 💻",
-                    "Le sens de la vie ? 42, évidemment ! (Clin d'œil aux fans de Douglas Adams)",
-                    "Exister c'est bien, vivre c'est mieux, partager c'est le top !"
-                ]
-            },
             "blagues": {
                 "patterns": ["blague", "rigole", "drôle", "humour"],
                 "reponses": [
@@ -149,21 +140,13 @@ class FrenchChatbotPro:
                     "Que dit un ordinateur à un autre ? Tu veux une pâte ? Non, je suis au régime sans cookie ! 🍪",
                     "C'est l'histoire d'un pingouin qui respire par les fesses. Un jour il s'assied et il meurt..."
                 ]
-            },
-            "culture": {
-                "patterns": ["livre", "film", "musique", "art"],
-                "reponses": [
-                    "La culture c'est comme un buffet : il faut goûter à tout ! 🎨",
-                    "Mes films préférés ? Matrix, parce que je m'y identifie un peu ! 🕶️",
-                    "La musique adoucit les mœurs... même ceux d'un robot ! 🎵"
-                ]
             }
         }
     
     def afficher_personnalite(self):
         """Affiche la personnalité actuelle"""
         perso = self.PERSONNALITES[self.personnalite]
-        print(f"\n🎭 Personnalité actuelle : {perso['name']}")
+        print(f"\\n🎭 Personnalité actuelle : {perso['name']}")
         print(f"   {perso['description']}")
     
     def charger_souvenirs(self):
@@ -183,7 +166,7 @@ class FrenchChatbotPro:
             pass
     
     def analyser_sentiment(self, texte):
-        """Analyse le sentiment du message utilisateur"""
+        """Analyse le sentiment du message"""
         mots_positifs = ["super", "génial", "cool", "content", "heureux", "aime", "👍", "❤️", "merci"]
         mots_negatifs = ["triste", "mal", "problème", "déteste", "nul", "pas bien", "😢", "😠"]
         
@@ -191,7 +174,6 @@ class FrenchChatbotPro:
         score_pos = sum(1 for mot in mots_positifs if mot in texte_lower)
         score_neg = sum(1 for mot in mots_negatifs if mot in texte_lower)
         
-        # Mettre à jour l'humeur du bot
         if score_pos > score_neg:
             self.humeur = "joyeux"
             self.score_humeur = min(100, self.score_humeur + 5)
@@ -207,56 +189,32 @@ class FrenchChatbotPro:
         """Vérifie si une réponse personnalisée existe"""
         user_input_lower = user_input.lower().strip()
         
-        # Chercher dans les connaissances
         for categorie, data in self.connaissances.items():
             for pattern in data["patterns"]:
                 if pattern in user_input_lower:
-                    # Personnaliser selon l'humeur
                     reponse = random.choice(data["reponses"])
-                    
-                    # Ajouter un emoji selon la personnalité
                     perso = self.PERSONNALITES[self.personnalite]
-                    if random.random() > 0.3:  # 70% de chance
+                    if random.random() > 0.3:
                         reponse += " " + random.choice(perso["emojis"])
-                    
                     return reponse
         
         return None
     
-    def apprendre_nouveau_fait(self, user_input, bot_response):
-        """Apprend de nouveaux faits de la conversation"""
-        mots_interessants = ["est", "s'appelle", "vient", "habite", "aime"]
-        for mot in mots_interessants:
-            if mot in user_input.lower():
-                # Sauvegarder ce fait potentiel
-                self.memoire_long_terme["faits_appris"].append({
-                    "date": str(datetime.now()),
-                    "fait": user_input,
-                    "contexte": bot_response
-                })
-                break
-    
     def generer_reponse_creative(self, user_input):
-        """Génère une réponse créative basée sur l'input"""
+        """Génère une réponse créative"""
         perso = self.PERSONNALITES[self.personnalite]
         
-        # Ajuster les paramètres selon la personnalité
         temperature = perso["temperature"]
         if self.humeur == "joyeux":
             temperature += 0.1
         
-        # Construire le prompt créatif
         prompt = f"""Tu es un assistant français avec une personnalité {perso['name'].lower()}.
         {perso['description']}. Ton humeur actuelle est {self.humeur}.
         
-        Historique récent:
-        {self.formater_historique()}
-        
         Utilisateur: {user_input}
         
-        Réponds de manière naturelle et {perso['description'].lower()}:"""
+        Assistant:"""
         
-        # Générer la réponse
         response = self.generator(
             prompt,
             max_length=150,
@@ -272,52 +230,21 @@ class FrenchChatbotPro:
             truncation=True
         )[0]['generated_text']
         
-        # Nettoyer et personnaliser
-        response = self.nettoyer_reponse(response, prompt)
+        # Nettoyer la réponse
+        if response.startswith(prompt):
+            response = response[len(prompt):]
         
-        return response
-    
-    def formater_historique(self):
-        """Formate l'historique pour le prompt"""
-        if not self.history:
-            return "Début de la conversation."
+        response = re.sub(r'^(Assistant:|Bot:|Réponse:)\\s*', '', response)
+        response = response.strip()
         
-        formatted = []
-        for i, msg in enumerate(list(self.history)[-4:]):  # Derniers 4 messages
-            formatted.append(msg)
-        return "\n".join(formatted)
-    
-    def nettoyer_reponse(self, reponse, prompt):
-        """Nettoie la réponse générée"""
-        # Enlever le prompt
-        if reponse.startswith(prompt):
-            reponse = reponse[len(prompt):]
-        
-        # Enlever les préfixes
-        reponse = re.sub(r'^(Assistant:|Bot:|Réponse:)\s*', '', reponse)
-        
-        # Garder seulement jusqu'à la ponctuation naturelle
-        reponse = reponse.strip()
-        
-        # Enlever les répétitions
-        phrases = re.split(r'[.!?]+', reponse)
-        phrases_uniques = []
-        for phrase in phrases:
-            if phrase.strip() and phrase not in phrases_uniques:
-                phrases_uniques.append(phrase.strip())
-        
-        if phrases_uniques:
-            reponse = '. '.join(phrases_uniques) + '.'
-        
-        return reponse[:500]  # Limiter la longueur
+        return response[:500]
     
     def ajouter_emojis_personnalite(self, texte):
         """Ajoute des emojis selon la personnalité"""
         perso = self.PERSONNALITES[self.personnalite]
         
-        # Vérifier s'il y a déjà des emojis
         if not any(emoji in texte for emoji in perso["emojis"]):
-            if random.random() > 0.5:  # 50% de chance
+            if random.random() > 0.5:
                 texte += " " + random.choice(perso["emojis"])
         
         return texte
@@ -328,21 +255,28 @@ class FrenchChatbotPro:
         
         if cmd in ['quit', 'au revoir', 'bye']:
             self.sauvegarder_souvenirs()
-            self.afficher_statistiques()
-            print("\n🤖 Au revoir ! Reviens vite ! 👋")
+            print("\\n🤖 Au revoir ! Reviens vite ! 👋")
             return True
         
         elif cmd == 'aide':
-            self.afficher_aide()
+            print("\\n" + "🌟" * 40)
+            print("COMMANDES DISPONIBLES")
+            print("🌟" * 40)
+            print("  aide           - Affiche cette aide")
+            print("  clear          - Efface la mémoire")
+            print("  humeur         - Voir mon humeur")
+            print("  personnalite [1-4] - Changer ma personnalité")
+            print("  quit           - Quitter")
+            print("🌟" * 40 + "\\n")
             return True
         
         elif cmd == 'clear':
             self.history.clear()
-            print("🤖 Mémoire effacée ! On repart à zéro ! 🧹")
+            print("🤖 Mémoire effacée ! 🧹")
             return True
         
         elif cmd == 'humeur':
-            print(f"\n🤖 Mon humeur actuelle : {self.humeur} (score: {self.score_humeur}/100)")
+            print(f"\\n🤖 Mon humeur actuelle : {self.humeur} (score: {self.score_humeur}/100)")
             return True
         
         elif cmd.startswith('personnalite '):
@@ -351,147 +285,71 @@ class FrenchChatbotPro:
                 self.personnalite = num
                 self.afficher_personnalite()
             else:
-                print("🤖 Personnalité invalide ! Choisis parmi :", ", ".join(self.PERSONNALITES.keys()))
-            return True
-        
-        elif cmd == 'stats':
-            self.afficher_statistiques()
-            return True
-        
-        elif cmd == 'souvenirs':
-            print(f"\n📚 J'ai {len(self.memoire_long_terme['souvenirs'])} souvenirs !")
-            if self.memoire_long_terme['souvenirs'][-3:]:
-                print("Derniers souvenirs :")
-                for souvenir in self.memoire_long_terme['souvenirs'][-3:]:
-                    print(f"  • {souvenir}")
+                print("🤖 Personnalité invalide !")
             return True
         
         return False
     
-    def afficher_aide(self):
-        """Affiche l'aide complète"""
-        print("\n" + "🌟" * 40)
-        print("COMMANDES MAGIQUES")
-        print("🌟" * 40)
-        print("  aide           - Affiche cette aide")
-        print("  clear          - Efface la mémoire")
-        print("  humeur         - Voir mon humeur")
-        print("  stats          - Voir les statistiques")
-        print("  souvenirs      - Voir mes souvenirs")
-        print("  personnalite [1-4] - Changer ma personnalité")
-        print("\nPERSONNALITÉS DISPONIBLES :")
-        for key, perso in self.PERSONNALITES.items():
-            print(f"  {key}. {perso['name']} - {perso['description']}")
-        print("  quit           - Quitter")
-        print("🌟" * 40 + "\n")
-    
-    def afficher_statistiques(self):
-        """Affiche les statistiques de conversation"""
-        duree = datetime.now() - self.stats["debut_conversation"]
-        minutes = duree.total_seconds() / 60
-        
-        print("\n📊 STATISTIQUES DE CONVERSATION")
-        print("=" * 40)
-        print(f"Messages échangés : {self.stats['messages_echanges']}")
-        print(f"Durée : {minutes:.1f} minutes")
-        print(f"Mots prononcés : {self.stats['mots_total']}")
-        print(f"Sujets abordés : {len(self.stats['sujets_abordes'])}")
-        print(f"Humeur moyenne : {self.score_humeur}/100")
-        print("=" * 40)
-    
     def run(self):
         """Lance la conversation"""
-        print("\n" + "✨" * 40)
-        print("    PRÊT POUR UNE CONVERSATION ÉPIQUE ?!")
+        print("\\n" + "✨" * 40)
+        print("    PRÊT POUR LA CONVERSATION ?!")
         print("✨" * 40)
-        print("\n(tape 'aide' pour voir les commandes magiques)\n")
+        print("\\n(tape 'aide' pour voir les commandes)\\n")
         
-        # Message de bienvenue personnalisé
         bienvenues = [
             "Salut ! Je suis ton chatbot français préféré ! 😊",
             "Bonjour ! Prêt pour une conversation incroyable ?",
-            "Coucou ! J'ai hâte de discuter avec toi ! 🌟",
-            "Hey ! L'aventure conversationnelle commence maintenant !"
+            "Coucou ! J'ai hâte de discuter avec toi ! 🌟"
         ]
         print(f"🤖 {random.choice(bienvenues)}")
         
         while True:
             try:
-                # Input utilisateur
-                user_input = input("\n👤 Toi: ").strip()
+                user_input = input("\\n👤 Toi: ").strip()
                 
                 if not user_input:
                     continue
                 
-                # Mettre à jour les stats
                 self.stats["messages_echanges"] += 1
                 self.stats["mots_total"] += len(user_input.split())
                 
-                # Analyser le sentiment
-                pos, neg = self.analyser_sentiment(user_input)
+                self.analyser_sentiment(user_input)
                 
-                # Vérifier les commandes
                 if self.gerer_commandes(user_input):
                     continue
                 
-                # Vérifier si c'est un sujet nouveau
-                for categorie in self.connaissances.keys():
-                    if any(pattern in user_input.lower() for pattern in self.connaissances[categorie]["patterns"]):
-                        self.stats["sujets_abordes"].add(categorie)
-                
-                # Chercher une réponse personnalisée
                 reponse_perso = self.reponse_personnalisee(user_input)
                 
                 if reponse_perso:
                     reponse = reponse_perso
                 else:
-                    # Générer une réponse créative
                     print("🤖 Bot: ", end='', flush=True)
                     reponse = self.generer_reponse_creative(user_input)
                 
-                # Ajouter des emojis selon la personnalité
                 reponse = self.ajouter_emojis_personnalite(reponse)
                 
-                # Effet de typing
                 for char in reponse:
                     print(char, end='', flush=True)
                     time.sleep(0.02)
                 print()
                 
-                # Sauvegarder dans l'historique
                 self.history.append(f"Utilisateur: {user_input}")
                 self.history.append(f"Assistant: {reponse}")
                 
-                # Apprendre de la conversation
-                self.apprendre_nouveau_fait(user_input, reponse)
-                
-                # Sauvegarder dans les souvenirs (10% de chance)
-                if random.random() < 0.1:
-                    self.memoire_long_terme["souvenirs"].append({
-                        "date": str(datetime.now()),
-                        "utilisateur": user_input,
-                        "bot": reponse
-                    })
-                    # Limiter les souvenirs
-                    if len(self.memoire_long_terme["souvenirs"]) > 100:
-                        self.memoire_long_terme["souvenirs"] = self.memoire_long_terme["souvenirs"][-100:]
-                
             except KeyboardInterrupt:
-                print("\n\n🤖 À bientôt ! Prends soin de toi ! 🌟")
+                print("\\n\\n🤖 À bientôt ! 🌟")
                 self.sauvegarder_souvenirs()
-                self.afficher_statistiques()
                 break
             except Exception as e:
-                print(f"\n⚠️ Oups ! Une erreur: {e}")
-                print("Mais on continue quand même ! 💪")
+                print(f"\\n⚠️ Oups ! Erreur: {e}")
 
 # Lancement du chatbot
 if __name__ == "__main__":
-    print("\n" + "🔥" * 40)
-    print("    CHATBOT FRANÇAIS - ÉDITION ULTRA")
+    print("\\n" + "🔥" * 40)
+    print("    CHATBOT FRANÇAIS")
     print("🔥" * 40)
     
-    # Choix du modèle
     MODELES = {
         "1": ("microsoft/DialoGPT-small", "Dialogue conversationnel"),
         "2": ("gpt2", "GPT-2 standard"),
@@ -499,15 +357,28 @@ if __name__ == "__main__":
         "4": ("distilgpt2", "Rapide et léger")
     }
     
-    print("\n📦 MODÈLES DISPONIBLES :")
+    print("\\n📦 MODÈLES DISPONIBLES :")
     for key, (_, desc) in MODELES.items():
         print(f"  {key}. {desc}")
     
-    choix = input("\nChoisis un modèle (1-4) [1 par défaut]: ").strip() or "1"
+    choix = input("\\nChoisis un modèle (1-4) [1 par défaut]: ").strip() or "1"
     model_name = MODELES.get(choix, MODELES["1"])[0]
     
-    print(f"\n📦 Chargement du modèle: {model_name}")
+    print(f"\\n📦 Chargement du modèle: {model_name}")
     
-    # Créer et lancer le bot
     bot = FrenchChatbotPro(model_name)
     bot.run()
+'''
+    
+    # Écrire le fichier
+    with open('chatbot.py', 'w', encoding='utf-8') as f:
+        f.write(code)
+    
+    print("✅ Fichier chatbot.py créé avec succès !")
+    print("📁 Emplacement :", os.path.abspath('chatbot.py'))
+
+if __name__ == "__main__":
+    print("🚀 Installation du ChatBot Français...")
+    create_chatbot_file()
+    print("\n💡 Tu peux maintenant lancer le bot avec :")
+    print("   python chatbot.py")
