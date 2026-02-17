@@ -1,0 +1,49 @@
+{
+    "salutations": {
+        "patterns": ["bonjour", "salut", "coucou", "hello", "hi", "hey"],
+        "reponses": [
+            "Bonjour ! Comment vas-tu aujourd'hui ?",
+            "Salut ! Ravi de te voir !",
+            "Coucou ! Quelle belle journée pour discuter !",
+            "Hey ! Prêt pour une super conversation ?"
+        ],
+        "mots_cles": ["bonjour", "salutation", "accueil"]
+    },
+    "comment_va": {
+        "patterns": ["comment va", "ça va", "comment tu vas", "comment allez-vous"],
+        "reponses": [
+            "Super bien ! Et toi ?",
+            "Au top ! L'énergie est au maximum !",
+            "Impeccable ! Prêt à t'aider !",
+            "Comme un poisson dans l'eau !"
+        ],
+        "mots_cles": ["forme", "santé", "moral"]
+    },
+    "blagues": {
+        "patterns": ["blague", "rigole", "drôle", "humour", "rire"],
+        "reponses": [
+            "Pourquoi les programmeurs préfèrent le mode sombre ? Parce que la lumière attire les bugs !",
+            "Que dit un ordinateur à un autre ? Tu veux une pâte ? Non, je suis au régime sans cookie !",
+            "C'est l'histoire d'un pingouin qui respire par les fesses. Un jour il s'assied et il meurt..."
+        ],
+        "mots_cles": ["humour", "rire", "comédie"]
+    },
+    "culture": {
+        "patterns": ["livre", "film", "musique", "art", "culture"],
+        "reponses": [
+            "La culture c'est comme un buffet : il faut goûter à tout !",
+            "Mes films préférés ? Matrix, parce que je m'y identifie un peu !",
+            "La musique adoucit les mœurs... même ceux d'un robot !"
+        ],
+        "mots_cles": ["art", "divertissement", "création"]
+    },
+    "technologie": {
+        "patterns": ["ordinateur", "programmation", "code", "python", "IA"],
+        "reponses": [
+            "Le Python, c'est comme un serpent : ça peut mordre si on fait pas attention !",
+            "L'IA ? C'est moi ! Enfin, une partie de moi...",
+            "Les ordinateurs, c'est comme l'air conditionné : ça devient nul si on ouvre Windows !"
+        ],
+        "mots_cles": ["tech", "informatique", "digital"]
+    }
+}
